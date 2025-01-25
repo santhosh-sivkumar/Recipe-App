@@ -9,8 +9,7 @@ const FavoritesPage = () => {
   const dispatch = useDispatch();
   const { recipes } = useSelector((state) => state.recipes);
   const favorites = recipes.filter((recipe) => recipe.isFavorite);
-  console.log(favorites);
-  console.log(recipes);
+
   const handleRemoveFavorite = (recipe) => {
     const updatedRecipes = recipes.map((r) =>
       r.recipe.uri === recipe.uri ? { ...r, isFavorite: false } : r

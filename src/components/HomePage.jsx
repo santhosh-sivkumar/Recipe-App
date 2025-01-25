@@ -25,7 +25,7 @@ function HomePage() {
     setIsLoading(true);
     try {
       const res = await axios.get(
-        `https://api.edamam.com/search?q=${query}&app_id=a5de3521&app_key=28f8a20bd893e2740e68d4bbb349b977&from=0&to=50`
+        `https://api.edamam.com/search?q=${query}&app_id=a5de3521&app_key=28f8a20bd893e2740e68d4bbb349b977&from=0&to=100`
       );
 
       // Add isFavorite property to each recipe
@@ -55,8 +55,8 @@ function HomePage() {
 
   useEffect(() => {
     initializeRecipes();
-  }, [dispatch]);
-  console.log("hi");
+  }, []);
+
   useEffect(() => {
     if (searchQuery) {
       fetchRecipes(searchQuery);
@@ -90,18 +90,30 @@ function HomePage() {
   const filteredRecipes = recipes.filter((recipe) => {
     const { category, dietary } = filters;
     let isMatch = true;
-    if (category !== "all" && recipe.recipe.cuisineType !== category) {
-      isMatch = false;
-    }
+
+    // Check if category matches any item in mealType
     if (
-      dietary !== "all" &&
-      recipe.recipe.dietLabels &&
-      !recipe.recipe.dietLabels.includes(dietary)
+      category !== "all" &&
+      !recipe.recipe.mealType.some((type) =>
+        type.toLowerCase().includes(category.toLowerCase())
+      )
     ) {
       isMatch = false;
     }
+
+    // Check if dietary matches any item in healthLabels
+    if (
+      dietary !== "all" &&
+      !recipe.recipe.healthLabels.some((label) =>
+        label.toLowerCase().includes(dietary.toLowerCase())
+      )
+    ) {
+      isMatch = false;
+    }
+
     return isMatch;
   });
+
   const favorites = recipes.filter((recipe) => recipe.isFavorite);
   return (
     <div className="max-w-screen-xl mx-auto py-8 px-4">
@@ -110,12 +122,12 @@ function HomePage() {
       </h1>
 
       {/* Search Bar, Filters, and Favorites Icon */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-4">
         <SearchBar searchQuery={searchQuery} handleSearch={handleSearch} />
         <Filters filters={filters} handleFilterChange={handleFilterChange} />
         <button
           onClick={() => navigate("/favorites")}
-          className="relative px-4 py-2 cursor-pointer bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+          className="relative sm:w-[75%]  md:w-[25%] lg:w-2/12 px-4 py-2 cursor-pointer bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
         >
           <FaRegHeart size={20} className="mr-2" />
           Favorites

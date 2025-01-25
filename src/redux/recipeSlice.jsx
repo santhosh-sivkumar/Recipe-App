@@ -10,10 +10,14 @@ const recipeSlice = createSlice({
       category: "all",
       dietary: "all",
     },
+    currentPage: 1,
   },
   reducers: {
     setRecipes: (state, action) => {
       state.recipes = action.payload;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
     },
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
@@ -27,6 +31,7 @@ const recipeSlice = createSlice({
 export const {
   setRecipes,
   setSearchQuery,
+  setCurrentPage,
   addFavorite,
   removeFavorite,
   setFilters,
