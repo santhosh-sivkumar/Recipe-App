@@ -12,9 +12,13 @@ import {
 
 const RecipeDetailsPage = () => {
   let { id } = useParams();
+  console.log(id);
   id = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + id;
   const navigate = useNavigate();
-  const { recipes } = useSelector((state) => state.recipes);
+  let { recipes } = useSelector((state) => state.recipes);
+  if (recipes.length == 0) {
+    recipes = JSON.parse(localStorage.getItem("recipes"));
+  }
   const recipe = recipes.find((r) => r.recipe.uri === id)?.recipe;
 
   if (!recipe) {
