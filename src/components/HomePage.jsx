@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   setRecipes,
   setSearchQuery,
@@ -28,13 +29,11 @@ function HomePage() {
         `https://api.edamam.com/search?q=${query}&app_id=a5de3521&app_key=28f8a20bd893e2740e68d4bbb349b977&from=0&to=100`
       );
 
-      // Add isFavorite property to each recipe
       const fetchedRecipes = res.data.hits.map((recipe) => ({
         ...recipe,
-        isFavorite: false, // Add default isFavorite property
+        isFavorite: false,
       }));
 
-      // Store recipes in local storage
       localStorage.setItem("recipes", JSON.stringify(fetchedRecipes));
       dispatch(setRecipes(fetchedRecipes));
     } catch (error) {
@@ -71,7 +70,7 @@ function HomePage() {
     const updatedRecipes = recipes.map((r) =>
       r.recipe.uri === recipe.uri ? { ...r, isFavorite: true } : r
     );
-    localStorage.setItem("recipes", JSON.stringify(updatedRecipes)); // Update local storage
+    localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
     dispatch(setRecipes(updatedRecipes));
   };
 
@@ -79,7 +78,7 @@ function HomePage() {
     const updatedRecipes = recipes.map((r) =>
       r.recipe.uri === recipe.uri ? { ...r, isFavorite: false } : r
     );
-    localStorage.setItem("recipes", JSON.stringify(updatedRecipes)); // Update local storage
+    localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
     dispatch(setRecipes(updatedRecipes));
   };
 
@@ -91,7 +90,6 @@ function HomePage() {
     const { category, dietary } = filters;
     let isMatch = true;
 
-    // Check if category matches any item in mealType
     if (
       category !== "all" &&
       !recipe.recipe.mealType.some((type) =>
@@ -101,7 +99,6 @@ function HomePage() {
       isMatch = false;
     }
 
-    // Check if dietary matches any item in healthLabels
     if (
       dietary !== "all" &&
       !recipe.recipe.healthLabels.some((label) =>
@@ -115,40 +112,125 @@ function HomePage() {
   });
 
   const favorites = recipes.filter((recipe) => recipe.isFavorite);
+
+  // Carousel state and logic
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselItems = recipes.slice(0, 5); // Show first 5 recipes in the carousel
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === carouselItems.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // 5 seconds interval
+
+    return () => clearInterval(interval);
+  }, [carouselItems.length]);
+
   return (
-    <div className="max-w-screen-xl mx-auto py-8 px-4">
-      <h1 className="text-4xl text-center font-bold mb-8 text-gray-800">
-        Recipe Finder
-      </h1>
+    <div className="max-w-screen-xl mx-auto py-8 px-4 bg-gray-50">
+      <motion.h1
+        className="text-4xl text-center font-semibold text-gray-800 mb-10 tracking-tight"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Discover Delicious Recipes
+      </motion.h1>
+
+      {/* Carousel Section */}
+      <motion.div
+        className="mb-8 relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="overflow-hidden relative rounded-lg shadow-lg">
+          <motion.div
+            className="flex transition-transform duration-1000 ease-in-out"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
+          >
+            {carouselItems.map((recipe, index) => (
+              <motion.div
+                key={index}
+                className="w-full flex-shrink-0 p-6 bg-white rounded-lg shadow-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <img
+                  src={recipe.recipe.image}
+                  alt={recipe.recipe.label}
+                  className="w-full h-64 object-cover rounded-md"
+                />
+                <h2 className="text-xl font-semibold mt-4 text-gray-700">
+                  {recipe.recipe.label}
+                </h2>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Carousel Controls */}
+          <button
+            onClick={() =>
+              setCurrentIndex((prevIndex) =>
+                prevIndex === 0 ? carouselItems.length - 1 : prevIndex - 1
+              )
+            }
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-3 rounded-full shadow-md hover:bg-gray-700 transition-all duration-300"
+          >
+            &#10094;
+          </button>
+          <button
+            onClick={() =>
+              setCurrentIndex((prevIndex) =>
+                prevIndex === carouselItems.length - 1 ? 0 : prevIndex + 1
+              )
+            }
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-3 rounded-full shadow-md hover:bg-gray-700 transition-all duration-300"
+          >
+            &#10095;
+          </button>
+        </div>
+      </motion.div>
 
       {/* Search Bar, Filters, and Favorites Icon */}
-      <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-6">
         <SearchBar searchQuery={searchQuery} handleSearch={handleSearch} />
         <Filters filters={filters} handleFilterChange={handleFilterChange} />
-        <button
+        <motion.button
           onClick={() => navigate("/favorites")}
-          className="relative sm:w-[75%]  md:w-[25%] lg:w-2/12 px-4 py-2 cursor-pointer bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+          className="relative cursor-pointer lg:w-2/12 sm:w-[75%] md:w-[25%] px-4 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 flex items-center justify-center transition-all duration-300"
+          whileHover={{ scale: 1.03 }}
         >
           <FaRegHeart size={20} className="mr-2" />
           Favorites
-          <span className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full px-2 py-1 text-xs font-bold">
+          <span className="absolute -top-2 -right-2 bg-white text-red-500 border border-red-500 rounded-full px-2 py-1 text-xs font-bold">
             {favorites.length}
           </span>
-        </button>
+        </motion.button>
       </div>
 
       {/* Content Section */}
       {isLoading ? (
-        <div className="flex justify-center items-center w-full h-[500px] relative">
+        <div className="flex justify-center items-center w-full h-[500px] relative bg-gray-200 rounded-lg shadow-md">
           <Loading />
         </div>
       ) : (
-        <RecipeList
-          recipes={filteredRecipes}
-          favorites={favorites}
-          handleAddFavorite={handleAddFavorite}
-          handleRemoveFavorite={handleRemoveFavorite}
-        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <RecipeList
+            recipes={filteredRecipes}
+            favorites={favorites}
+            handleAddFavorite={handleAddFavorite}
+            handleRemoveFavorite={handleRemoveFavorite}
+          />
+        </motion.div>
       )}
     </div>
   );

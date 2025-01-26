@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 
 const RecipeCard = ({
   recipe,
@@ -21,9 +22,13 @@ const RecipeCard = ({
   };
 
   return (
-    <div
+    <motion.div
       key={recipe.label}
       className="max-w-sm w-full bg-white rounded-lg overflow-hidden shadow-lg flex flex-col"
+      initial={{ opacity: 0, scale: 0.9 }} // Start with lower opacity and scale
+      animate={{ opacity: 1, scale: 1 }} // Animate to full opacity and normal scale
+      exit={{ opacity: 0, scale: 0.9 }} // Exit with the same effect
+      transition={{ duration: 0.3 }} // Smooth transition
     >
       <div className="relative">
         {isLoading && (
@@ -62,15 +67,16 @@ const RecipeCard = ({
             <span className="text-sm">Favorite</span>
           </button>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
             onClick={() => navigate(`/recipe/${recipe.uri.split("_")[1]}`)}
             className="px-4 cursor-pointer py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none text-sm"
           >
             View Details
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import RecipeCard from "./RecipeCard";
 import { setCurrentPage } from "../redux/recipeSlice.jsx";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion"; // Import motion from framer-motion
+
 const RecipeList = ({
   recipes,
   handleAddFavorite,
@@ -39,8 +41,14 @@ const RecipeList = ({
 
   return (
     <div>
-      {/* Recipe Grid */}
-      <div className="grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {/* Recipe Grid with motion */}
+      <motion.div
+        className="grid justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        initial={{ opacity: 0, y: 50 }} // Initial state: fade and move up
+        animate={{ opacity: 1, y: 0 }} // Animate to full opacity and no vertical movement
+        exit={{ opacity: 0, y: -50 }} // Exit state: fade and move up
+        transition={{ duration: 0.3 }} // Smooth transition
+      >
         {currentRecipes.map((recipeData) => (
           <RecipeCard
             key={recipeData.recipe.uri}
@@ -51,11 +59,16 @@ const RecipeList = ({
             handleRecipeDetails={handleRecipeDetails}
           />
         ))}
-      </div>
+      </motion.div>
 
-      {/* Conditional Pagination Controls */}
+      {/* Conditional Pagination Controls with motion */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center mt-8 space-x-4">
+        <motion.div
+          className="flex justify-center items-center mt-8 space-x-4"
+          initial={{ opacity: 0 }} // Initial state: invisible
+          animate={{ opacity: 1 }} // Animate to full opacity
+          transition={{ duration: 0.3 }} // Smooth transition
+        >
           <button
             onClick={handlePrevPage}
             disabled={currentPage === 1}
@@ -94,7 +107,7 @@ const RecipeList = ({
           >
             Next
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
