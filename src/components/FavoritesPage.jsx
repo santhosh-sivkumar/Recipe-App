@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
 const FavoritesPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top when this component is rendered
+  }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { recipes } = useSelector((state) => state.recipes);
