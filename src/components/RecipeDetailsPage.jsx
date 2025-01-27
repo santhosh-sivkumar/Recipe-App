@@ -12,10 +12,13 @@ import {
 import { motion } from "framer-motion"; // Import framer-motion
 
 const RecipeDetailsPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top when this component is rendered
+  }, []);
   let { id } = useParams();
-  console.log(id);
   id = "http://www.edamam.com/ontologies/edamam.owl#recipe_" + id;
   const navigate = useNavigate();
+
   let { recipes } = useSelector((state) => state.recipes);
   if (recipes.length == 0) {
     recipes = JSON.parse(localStorage.getItem("recipes"));
