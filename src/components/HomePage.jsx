@@ -26,7 +26,7 @@ function HomePage() {
     setIsLoading(true);
     try {
       const res = await axios.get(
-        `https://www.edamam.com/api/recipes/v2?q=${query}&field=uri&field=label&field=image&field=calories&field=yield&field=source&field=ingredientLines&field=ingredients&field=totalNutrients&field=totalWeight&field=healthLabels&field=dishType&field=shareAs&field=totalTime&field=url&field=cuisineType&field=mealType&from=0&to=100&_cont=CHcVQBtNNQphDmgVQntAEX4BYkt0BAMDRG1IC2URYld1AQcVX3cVVjQRNlxyAlZSRWdBUjAaN1YlAwBTQGFCA2UVYl13VhFqX3cWQT1OcV9xBE4%3D&calories=1-10000&type=public&_=1737965331693`
+        `https://www.edamam.com/api/recipes/v2?q=${query}&field=uri&field=label&field=image&field=cautions&field=dietLabels&field=calories&field=yield&field=source&field=ingredientLines&field=ingredients&field=totalNutrients&field=totalWeight&field=healthLabels&field=dishType&field=shareAs&field=totalTime&field=url&field=cuisineType&field=mealType&from=0&to=100&_cont=CHcVQBtNNQphDmgVQntAEX4BYkt0BAMDRG1IC2URYld1AQcVX3cVVjQRNlxyAlZSRWdBUjAaN1YlAwBTQGFCA2UVYl13VhFqX3cWQT1OcV9xBE4%3D&calories=1-10000&type=public&_=1737965331693`
       );
       const fetchedRecipes = res.data.hits.map((recipe) => ({
         ...recipe,

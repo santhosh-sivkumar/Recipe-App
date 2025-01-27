@@ -226,6 +226,134 @@ const RecipeDetailsPage = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* Nutrition Details */}
+        <div className="bg-yellow-100 p-4 rounded-lg mb-6">
+          <p className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+            <FaUtensils className="text-yellow-600" /> Nutrition Details:
+          </p>
+
+          <div className="flex flex-wrap gap-8">
+            {/* Table 1 */}
+            <div className="flex-1">
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                <thead className="bg-yellow-200">
+                  <tr>
+                    <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
+                      Nutrient
+                    </th>
+                    <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
+                      Quantity
+                    </th>
+                    <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
+                      Unit
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(recipe.totalNutrients)
+                    .slice(
+                      0,
+                      Math.ceil(Object.keys(recipe.totalNutrients).length / 2)
+                    ) // First half
+                    .map((key) => (
+                      <tr key={key} className="border-b border-gray-200">
+                        <td className="py-2 px-4 text-sm text-gray-700">
+                          {recipe.totalNutrients[key].label}
+                        </td>
+                        <td className="py-2 px-4 text-sm text-gray-700">
+                          {recipe.totalNutrients[key].quantity.toFixed(2)}
+                        </td>
+                        <td className="py-2 px-4 text-sm text-gray-700">
+                          {recipe.totalNutrients[key].unit}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Table 2 */}
+            <div className="flex-1">
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                <thead className="bg-yellow-200">
+                  <tr>
+                    <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
+                      Nutrient
+                    </th>
+                    <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
+                      Quantity
+                    </th>
+                    <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
+                      Unit
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(recipe.totalNutrients)
+                    .slice(
+                      Math.ceil(Object.keys(recipe.totalNutrients).length / 2)
+                    ) // Second half
+                    .map((key) => (
+                      <tr key={key} className="border-b border-gray-200">
+                        <td className="py-2 px-4 text-sm text-gray-700">
+                          {recipe.totalNutrients[key].label}
+                        </td>
+                        <td className="py-2 px-4 text-sm text-gray-700">
+                          {recipe.totalNutrients[key].quantity.toFixed(2)}
+                        </td>
+                        <td className="py-2 px-4 text-sm text-gray-700">
+                          {recipe.totalNutrients[key].unit}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* Diet Labels Section */}
+        {/* <div className="bg-purple-100 p-4 rounded-lg mb-6">
+          <p className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <FaAppleAlt className="text-purple-600" /> Diet Labels:
+          </p>
+          <div className="flex flex-wrap gap-4 pt-4">
+            {recipe.dietLabels.length > 0 ? (
+              recipe.dietLabels.map((label, idx) => (
+                <span
+                  key={idx}
+                  className="bg-white text-purple-800 text-sm font-medium px-4 py-2 rounded-full shadow-md"
+                >
+                  {label}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-500">No diet labels available.</span>
+            )}
+          </div>
+        </div> */}
+
+        {/* Cautions Section */}
+        {/* <div className="bg-red-100 p-4 rounded-lg mb-6">
+          <p className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <FaExclamationTriangle className="text-red-600" /> Cautions:
+          </p>
+          <div className="flex flex-wrap gap-4 pt-4">
+            {recipe.cautions.length > 0 ? (
+              recipe.cautions.map((caution, idx) => (
+                <span
+                  key={idx}
+                  className="bg-white text-red-800 text-sm font-medium px-4 py-2 rounded-full shadow-md"
+                >
+                  {caution}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-500">No cautions specified.</span>
+            )}
+          </div>
+        </div> */}
       </motion.div>
     </motion.div>
   );
