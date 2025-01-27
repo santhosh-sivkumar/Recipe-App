@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeCard from "./RecipeCard";
 import { setRecipes } from "../redux/recipeSlice";
